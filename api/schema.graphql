@@ -1,0 +1,158 @@
+interface Node {
+    id: ID!
+}
+
+enum RunStatus {
+    PENDING
+    PLAN_QUEUED
+    PLANNING
+    PLANNED
+    CONFIRMED
+    APPLY_QUEUED
+    APPLYING
+    APPLIED
+    DISCARDED
+    CANCELED
+    ERRORED
+}
+
+type Workspace implements Node {
+    id: ID!
+    name: String!
+    createdAt: String!
+    workingDirectory: String
+    runs: RunConnection!
+    workspaceVariables: [WorkspaceVariable!]!
+}
+
+type Run implements Node {
+    id: ID!
+    status: RunStatus!
+    createdAt: String!
+    statusTimestamps: RunStatusTimestamps!
+    planOutput: String
+    applyOutput: String
+}
+
+type RunConnection {
+    cursor: String!
+}
+
+type RunStatusTimestamps {
+    pendingAt: String
+    planQueuedAt: String
+    planningAt: String
+    plannedAt: String
+    confirmedAt: String
+    applyQueuedAt: String
+    applyingAt: String
+    appliedAt: String
+    discardedAt: String
+    canceledAt: String
+    erroredAt: String
+}
+
+type WorkspaceVariable implements Node {
+    id: ID!
+    key: String!
+    value: String
+    sensitive: Boolean!
+    workspaceId: ID!
+}
+
+input CreateWorkspaceVariableInput {
+    workspaceId: ID!
+    key: String!
+    value: String!
+    sensitive: Boolean = false
+}
+
+type CreateWorkspaceVariablePayload {
+    workspaceVariable: WorkspaceVariable
+}
+
+input CreateWorkspaceInput {
+    name: String!
+}
+
+type CreateWorkspacePayload {
+    workspace: Workspace
+}
+
+input CancelWorkspaceInput {
+    workspaceId: ID!
+}
+
+type CancelWorkspacePayload {
+    workspace: Workspace
+}
+
+input UpdateWorkspaceVariableInput {
+    workspaceVariableId: ID!
+    key: String
+    value: String
+    sensitive: Boolean
+}
+
+type UpdateWorkspaceVariablePayload {
+    workspaceVariable: WorkspaceVariable
+}
+
+input UpdateWorkspaceVariableByKeyInput {
+    key: String
+    value: String
+    sensitive: Boolean
+}
+
+type UpdateWorkspaceVariableByKeyPayload {
+    workspaceVariable: WorkspaceVariable
+}
+
+type PageInfo {
+
+}
+
+type WorkspaceEdge {
+    cursor: String!
+    workspace: Workspace!
+}
+
+type WorkspaceConnection {
+    edges: [WorkspaceEdge!]!
+    pageInfo: PageInfo!
+}
+
+type Query {
+    workspaces(first: Int, last: Int, before: String, after: String): WorkspaceConnection!
+    workspace(workspaceId: ID!): Workspace
+    workspaceByName(name: String!): Workspace
+}
+
+input UpdateWorkspaceInput {
+    id: ID!
+    name: String
+    workingDirectory: String
+}
+
+type UpdateWorkspacePayload {
+    workspace: Workspace
+}
+
+input CreateRunInput {
+    workspaceId: ID!
+}
+
+type CreateRunPayload {
+    run: Run
+}
+
+type PutWorkspaceVariableByName
+
+type Mutation {
+    cancelWorkspace(input: CancelWorkspaceInput!): CancelWorkspacePayload!
+    createRun(input: CreateRunInput): CreateRunPayload!
+    createWorkspace(input: CreateWorkspaceInput!): CreateWorkspacePayload!
+    createWorkspaceVariable(input: CreateWorkspaceVariableInput!): CreateWorkspaceVariablePayload!
+    updateWorkspace(input: UpdateWorkspaceInput!): UpdateWorkspacePayload!
+    updateWorkspaceVariable(input: UpdateWorkspaceVariableInput!): UpdateWorkspaceVariablePayload!
+}
