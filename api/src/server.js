@@ -17,14 +17,14 @@ function initializeOptions(options) {
 }
 
 function generateToken() {
-  
+  return "token";
 }
 
 export default function(options = {}) {
 
   options = initializeOptions(options);
 
-  const rootToken = options.token || "token";
+  const rootToken = options.token || generateToken();
   const rootUser = { name: "root" };
 
   // Use bearer strategy to authenticate token.

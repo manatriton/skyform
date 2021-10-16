@@ -15,6 +15,7 @@ exports.up = function(knex) {
     table.timestamp("confirmed_at");
     table.timestamp("apply_queued_at");
     table.timestamp("applying_at");
+    table.timestamp("applied_at");
     table.timestamp("discarded_at");
     table.timestamp("canceled_at");
     table.timestamp("errored_at");

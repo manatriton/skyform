@@ -15,6 +15,7 @@ import {
   Mutation,
   Query,
   Workspace,
+  Run,
 } from "./resolvers";
 import { parseId } from "./util";
 
@@ -62,6 +63,15 @@ const workspaceVariableType = new GraphQLObjectType({
     },
   }),
   interfaces: () => [nodeType],
+});
+
+const zipFileInputType = new GraphQLInputObjectType({
+  name: "ZipFileInput",
+  fields: () => ({
+    base64: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  }),
 });
 
 const workspaceType = new GraphQLObjectType({
@@ -187,6 +197,9 @@ const createWorkspaceInputType = new GraphQLInputObjectType({
     name: {
       type: new GraphQLNonNull(GraphQLString),
     },
+    zipFile: {
+      type: zipFileInputType,
+    },
   }),
 });
 
@@ -231,34 +244,34 @@ const runStatusTimestampsType = new GraphQLObjectType({
   name: "StatusTimestamps",
   fields: () => ({
     pendingAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     planQueuedAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     planningAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     confirmedAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     applyQueuedAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     applyingAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     appliedAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     discardedAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     canceledAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     erroredAt: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
   }),
 });
@@ -278,11 +291,16 @@ const runType = new GraphQLObjectType({
     statusTimestamps: {
       type: new GraphQLNonNull(runStatusTimestampsType),
     },
+    // lazily loaded
     planOutput: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
+      resolve: Run.planOutput,
     },
+    // lazily loaded
     applyOutput: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
+      resolve: Run.applyOutput,
+      // resolve:
     },
   }),
   interfaces: [nodeType],
@@ -299,6 +317,24 @@ const createRunInputType = new GraphQLInputObjectType({
 
 const createRunPayloadType = new GraphQLObjectType({
   name: "CreateRunPayload",
+  fields: () => ({
+    run: {
+      type: runType,
+    },
+  }),
+});
+
+const confirmRunInputType = new GraphQLInputObjectType({
+  name: "ConfirmRunInput",
+  fields: () => ({
+    runId: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
+  }),
+});
+
+const confirmRunPayloadType = new GraphQLObjectType({
+  name: "ConfirmRunPayload",
   fields: () => ({
     run: {
       type: runType,
@@ -341,6 +377,15 @@ const mutationType = new GraphQLObjectType({
         },
       },
       resolve: Mutation.createRun,
+    },
+    confirmRun: {
+      type: confirmRunPayloadType,
+      args: {
+        input: {
+          type: confirmRunInputType,
+        },
+      },
+      resolve: Mutation.confirmRun,
     },
     createWorkspace: {
       type: createWorkspacePayloadType,
@@ -385,28 +430,28 @@ const runStatusType = new GraphQLEnumType({
       value: "PLANNING",
     },
     PLANNED: {
-      value: "PLANNING",
+      value: "PLANNED",
     },
     CONFIRMED: {
-      value: "PLANNING",
+      value: "CONFIRMED",
     },
     APPLY_QUEUED: {
-      value: "PLANNING",
+      value: "APPLY_QUEUED",
     },
     APPLYING: {
-      value: "PLANNING",
+      value: "APPLYING",
     },
     APPLIED: {
-      value: "PLANNING",
+      value: "APPLIED",
     },
     DISCARDED: {
-      value: "PLANNING",
+      value: "DISCARDED",
     },
     CANCELED: {
-      value: "PLANNING",
+      value: "CANCELED",
     },
     ERRORED: {
-      value: "PLANNING",
+      value: "ERRORED",
     },
   },
 });

@@ -4,6 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.string("name").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable();
+    table.string("working_directory");
 
     table.unique("name");
   });

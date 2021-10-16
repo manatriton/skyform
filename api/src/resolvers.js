@@ -16,6 +16,8 @@ export const Query = {
         return store.workspaces.getWorkspaceById(id);
       case "var":
         return store.workspaceVariables.getById(id);
+      case "run":
+        return store.runs.getRunById(id);
       default:
         return null;
     }
@@ -116,6 +118,15 @@ export const Workspace = {
   },
 };
 
+export const Run = {
+  applyOutput: async (obj, _, { store }) => {
+    return await store.runs.getRunApplyOutput(obj.id);
+  },
+  planOutput: async (obj, _, { store }) => {
+    return await store.runs.getRunPlanOutput(obj.id);
+  },
+};
+
 export const Mutation = {
   createWorkspace: async (_, { input: { name } }, { store }) => {
     const workspace = await store.workspaces.createWorkspace({ name });
@@ -132,7 +143,12 @@ export const Mutation = {
     return { workspaceVariable };
   },
   createRun: async (_, { input: { workspaceId } }, { store }) => {
-    return await store.runs.createRun({ workspaceId });
+    const run = await store.runs.createRun({ workspaceId });
+    return { run };
+  },
+  confirmRun: async (_, { input: { runId } }, { store }) => {
+    const run = await store.runs.confirmRun(runId);
+    return { run };
   },
   updateWorkspace: async (_, { input: { id, name, workingDirectory } }, { store }) => {
     const workspace = await store.workspaces.updateWorkspace({ id, name, workingDirectory });

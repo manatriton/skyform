@@ -23,6 +23,7 @@ type Workspace implements Node {
     workingDirectory: String
     runs: RunConnection!
     workspaceVariables: [WorkspaceVariable!]!
+    noColor: Boolean
 }
 
 type Run implements Node {
