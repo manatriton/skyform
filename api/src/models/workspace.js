@@ -2,11 +2,20 @@ import { convertToCamelCase, formatId, parseId } from "../util"
 
 const WORKSPACE_TYPE = "workspace";
 
+/**
+ * Service class for interacting with workspace tables;
+ */
 class Workspaces {
   constructor(options = {}) {
     this.db = options.db;
   }
 
+  /**
+   * Post-processing function for raw workspace object returned by Knex.
+   *
+   * @param rawWorkspace
+   * @return workspace object after post-processing.
+   */
   static postProcess(rawWorkspace) {
     return {
       ...convertToCamelCase(rawWorkspace),
@@ -15,6 +24,10 @@ class Workspaces {
     };
   }
 
+  /**
+   * Retrieves a workspace by its id.
+   * @param id
+   */
   async getWorkspaceById(id) {
     const { type, baseId } = parseId(id);
     if (type !== WORKSPACE_TYPE) {

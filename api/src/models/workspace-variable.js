@@ -7,6 +7,14 @@ class WorkspaceVariables {
     this.db = options.db;
   }
 
+  static defaultColumns = [
+    "id",
+    "key",
+    "value",
+    "sensitive",
+    "workspace_id",
+  ];
+
   static postProcess(workspaceVariable) {
     return {
       ...convertToCamelCase(workspaceVariable),
@@ -41,6 +49,20 @@ class WorkspaceVariables {
     return WorkspaceVariables.postProcess(result[0]);
   }
 
+  async update({ id, key, value, sensitive }) {
+    const { type, baseId } = parseId(id);
+    if (type !== WORKSPACE_VARIABLE_TYPE) {
+      return null;
+    }
+
+    const result = await this.db("workspace_variables")
+      .update({ key, value, sensitive })
+      .where({ id: baseId })
+      .returning(WorkspaceVariables.defaultColumns);
+
+    return WorkspaceVariables.postProcess(result[0]);
+  }
+
   async getByWorkspaceId(workspaceId) {
     const { type, baseId: workspaceBaseId } = parseId(workspaceId);
     // TODO: Handle invalid workspace id.
@@ -50,6 +72,19 @@ class WorkspaceVariables {
       .where({ workspace_id: workspaceBaseId });
 
     return result.map(WorkspaceVariables.postProcess);
+  }
+
+  async deleteById(id) {
+    const { type, baseId } = parseId(id);
+    if (type !== WORKSPACE_VARIABLE_TYPE) {
+      return null;
+    }
+
+    const result = await this.db("workspace_variables")
+      .delete()
+      .where({ id: baseId });
+
+    return result ? id : null;
   }
 }
 

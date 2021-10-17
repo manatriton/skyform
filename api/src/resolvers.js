@@ -169,8 +169,16 @@ export const Mutation = {
     const run = await store.runs.confirmRun(runId);
     return { run };
   },
+  deleteWorkspaceVariable: async (_, { input: { id } }, { store }) => {
+    const deletedWorkspaceVariableId = await store.workspaceVariables.deleteById(id);
+    return { deletedWorkspaceVariableId };
+  },
   updateWorkspace: async (_, { input: { id, name, workingDirectory } }, { store }) => {
     const workspace = await store.workspaces.updateWorkspace({ id, name, workingDirectory });
     return { workspace };
+  },
+  updateWorkspaceVariable: async(_, { input: { id, key, value, sensitive } }, { store }) => {
+    const workspaceVariable = await store.workspaceVariables.update({ id, key, value, sensitive });
+    return { workspaceVariable };
   },
 };

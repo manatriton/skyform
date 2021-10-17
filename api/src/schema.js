@@ -366,53 +366,116 @@ const updateWorkspacePayloadType = new GraphQLObjectType({
   }),
 });
 
+const updateWorkspaceVariableInputType = new GraphQLInputObjectType({
+  name: "UpdateWorkspaceVariableInput",
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
+    key: {
+      type: GraphQLString,
+    },
+    value: {
+      type: GraphQLString,
+    },
+    sensitive: {
+      type: GraphQLBoolean,
+    },
+  }),
+});
+
+const updateWorkspaceVariablePayloadType = new GraphQLObjectType({
+  name: "UpdateWorkspaceVariablePayload",
+  fields: () => ({
+    workspaceVariable: {
+      type: workspaceVariableType,
+    },
+  }),
+});
+
+const deleteWorkspaceVariableInputType = new GraphQLInputObjectType({
+  name: "DeleteWorkspaceVariableInput",
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  }),
+});
+
+const deleteWorkspaceVariablePayloadType = new GraphQLObjectType({
+  name: "DeleteWorkspaceVariablePayload",
+  fields: () => ({
+    deletedWorkspaceVariableId: {
+      type: GraphQLID,
+    },
+  }),
+});
+
 const mutationType = new GraphQLObjectType({
   name: "Mutation",
   fields: () => ({
     createRun: {
-      type: createRunPayloadType,
+      type: new GraphQLNonNull(createRunPayloadType),
       args: {
         input: {
-          type: createRunInputType,
+          type: new GraphQLNonNull(createRunInputType),
         },
       },
       resolve: Mutation.createRun,
     },
     confirmRun: {
-      type: confirmRunPayloadType,
+      type: new GraphQLNonNull(confirmRunPayloadType),
       args: {
         input: {
-          type: confirmRunInputType,
+          type: new GraphQLNonNull(confirmRunInputType),
         },
       },
       resolve: Mutation.confirmRun,
     },
     createWorkspace: {
-      type: createWorkspacePayloadType,
+      type: new GraphQLNonNull(createWorkspacePayloadType),
       args: {
         input: {
-          type: createWorkspaceInputType,
+          type: new GraphQLNonNull(createWorkspaceInputType),
         },
       },
       resolve: Mutation.createWorkspace,
     },
     createWorkspaceVariable: {
-      type: createWorkspaceVariablePayloadType,
+      type: new GraphQLNonNull(createWorkspaceVariablePayloadType),
       args: {
         input: {
-          type: createWorkspaceVariableInputType,
+          type: new GraphQLNonNull(createWorkspaceVariableInputType),
         },
       },
       resolve: Mutation.createWorkspaceVariable,
     },
-    updateWorkspace: {
-      type: updateWorkspacePayloadType,
+    deleteWorkspaceVariable: {
+      type: new GraphQLNonNull(deleteWorkspaceVariablePayloadType),
       args: {
         input: {
-          type: updateWorkspaceInputType,
+          type: new GraphQLNonNull(deleteWorkspaceVariableInputType),
+        },
+      },
+      resolve: Mutation.deleteWorkspaceVariable,
+    },
+    updateWorkspace: {
+      type: new GraphQLNonNull(updateWorkspacePayloadType),
+      args: {
+        input: {
+          type: new GraphQLNonNull(updateWorkspaceInputType),
         },
       },
       resolve: Mutation.updateWorkspace,
+    },
+    updateWorkspaceVariable: {
+      type: new GraphQLNonNull(updateWorkspaceVariablePayloadType),
+      args: {
+        input: {
+          type: new GraphQLNonNull(updateWorkspaceVariableInputType),
+        },
+      },
+      resolve: Mutation.updateWorkspaceVariable,
     },
   }),
 });
