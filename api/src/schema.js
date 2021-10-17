@@ -198,7 +198,7 @@ const createWorkspaceInputType = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLString),
     },
     zipFile: {
-      type: zipFileInputType,
+      type: new GraphQLNonNull(zipFileInputType),
     },
   }),
 });

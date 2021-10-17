@@ -54,7 +54,7 @@ class Workspaces {
     return Workspaces.postProcess(result[0]);
   };
 
-  async updateWorkspace({ id, name, workingDirectory }) {
+  async updateWorkspace({ id, name, workingDirectory, baseDirectory }) {
     let { type, baseId } = parseId(id);
     // TODO: Handle invalid workspace type.
 
@@ -63,7 +63,11 @@ class Workspaces {
     }
 
     const result = await this.db("workspaces")
-      .update({ name, workingDirectory })
+      .update({
+        name,
+        working_directory: workingDirectory,
+        base_directory: baseDirectory,
+      })
       .where({ id: baseId })
       .returning(["id", "name", "created_at"]);
 

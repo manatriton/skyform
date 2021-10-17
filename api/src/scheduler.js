@@ -44,8 +44,6 @@ class Scheduler {
     this.queueEvents.on("completed", async job => {
       const data = job.returnvalue;
 
-      console.log("completed");
-
       if (data.exitCode !== 0) {
         log.info(`${data.command} job for run ${data.runId}, workspace ${data.workspaceId} failed at ${data.timestamp}`);
 
@@ -99,7 +97,8 @@ class Scheduler {
       "ranked.status",
       "ranked.created_at",
       "ranked.workspace_id",
-      "workspaces.working_directory"
+      "workspaces.working_directory",
+      "workspaces.base_directory",
     )
       .from(subquery)
       .join("workspaces", "ranked.workspace_id", "=", "workspaces.id")
@@ -112,8 +111,8 @@ class Scheduler {
           command: run.status === "PENDING" ? "plan" : "apply",
           workspaceId: run.workspace_id,
           runId: run.id,
-          baseDirectory: "",
-          workingDirectory: "",
+          baseDirectory: run.base_directory,
+          workingDirectory: run.working_directory,
         };
 
         return this.queue.add(data.runId, data);

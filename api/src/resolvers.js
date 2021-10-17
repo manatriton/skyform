@@ -1,3 +1,6 @@
+import path from "path";
+import { Readable } from "stream";
+import unzipper from "unzipper";
 import {
   decodeCursorString,
   encodeCursor,
@@ -128,8 +131,24 @@ export const Run = {
 };
 
 export const Mutation = {
-  createWorkspace: async (_, { input: { name } }, { store }) => {
-    const workspace = await store.workspaces.createWorkspace({ name });
+  createWorkspace: async (_, { input: { name, zipFile } }, { store }) => {
+    let workspace = await store.workspaces.createWorkspace({ name });
+
+    // Extract output to workspace specific folder.
+    const baseDirectoryName = `workspace_${Date.now()}`;
+    const baseDirectory = path.resolve(new URL(import.meta.url).pathname, "../../fixtures", baseDirectoryName);
+
+    console.log(`Extracting to ${baseDirectory}`);
+    const readable = Readable.from(Buffer.from(zipFile.base64, "base64"));
+    readable.pipe(unzipper.Extract({ path: baseDirectory }));
+
+    await new Promise(resolve => {
+      readable.on("end", () => {
+        resolve();
+      });
+    });
+
+    workspace = await store.workspaces.updateWorkspace({ id: workspace.id, baseDirectory });
     return { workspace };
   },
   createWorkspaceVariable: async (_, { input: { workspaceId, key, value, sensitive = false }}, { store }) => {

@@ -4,7 +4,7 @@ import { Worker } from "bullmq";
 import execa from "execa";
 import pino from "pino";
 
-import db from "./db";
+import db, { config } from "./db";
 
 const log = pino({ level: "info" });
 
@@ -18,7 +18,7 @@ function initializeWorkerOptions(options) {
 async function handleJob(job) {
   log.info(`job ${job.id} started`);
 
-  const { command, workspaceId, runId } = job.data;
+  const { command, workspaceId, runId, baseDirectory } = job.data;
 
   await job.updateProgress({
     command,
@@ -28,14 +28,16 @@ async function handleJob(job) {
     timestamp: new Date(),
   });
 
-
   try {
     // Initialize terraform.
     log.info("running terraform init");
-    const cwd = path.resolve(new URL(import.meta.url).pathname, "../../fixtures/terraform-example");
-    console.log(cwd);
-    await execa("terraform", ["init"], {
-      cwd,
+
+    const conn_str =
+      `-backend-config=conn_str=postgres://${config.connection.user}:${config.connection.password}@localhost/terraform_backend?sslmode=disable`;
+
+    await execa("terraform", ["init", conn_str], {
+      all: true,
+      cwd: baseDirectory,
     });
 
     // Get workspace variables and serialize to CLI arguments.
@@ -57,8 +59,11 @@ async function handleJob(job) {
     log.info(`running command: ${["terraform", command, "-input=false", ...args]}`);
     const { all, exitCode, stdout, stderr } = await execa("terraform", [command, "-input=false", ...args], {
       all: true,
-      cwd,
+      cwd: baseDirectory,
     });
+
+    log.info(`terraform ${command} successfully run`);
+
     return {
       all,
       command,
@@ -71,6 +76,9 @@ async function handleJob(job) {
       workspaceId,
     };
   } catch (err) {
+
+    log.info(`terraform ${command} failed`);
+
     return {
       all: err.all,
       command,
@@ -94,7 +102,6 @@ function startWorker(options = {}) {
   });
 
   worker.on("failed", (job, err) => {
-    console.log(err);
     log.info(`job ${job.id} failed`);
   });
 

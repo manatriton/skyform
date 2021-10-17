@@ -13,7 +13,7 @@ function postProcessResponse(result, queryContext) {
   return convertToCamelCase(result);
 }
 
-const config = knexfile[process.env.NODE_ENV || "development"];
+export const config = knexfile[process.env.NODE_ENV || "development"];
 config.log = {
   warn: log,
   error: log,
@@ -22,5 +22,4 @@ config.log = {
 };
 
 // config.postProcessRespone = postProcessResponse;
-
 export default knex(config);
