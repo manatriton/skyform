@@ -1,8 +1,5 @@
 #!/usr/bin/env node
-
-require("pino-debug")();
+// require("pino-debug")();
 const dotenv = require("dotenv");
 dotenv.config();
-
-require = require("esm")(module);
 require("../src/cli").cli(process.argv);

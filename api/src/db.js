@@ -1,7 +1,7 @@
-import debug from "debug";
-import { knex } from "knex";
-import knexfile from "../knexfile";
-import { convertToCamelCase } from "./util";
+const debug = require("debug");
+const knex = require("knex");
+const knexfile = require("../knexfile");
+const { convertToCamelCase } = require("./util");
 
 const log = debug("knex:client");
 
@@ -13,7 +13,7 @@ function postProcessResponse(result, queryContext) {
   return convertToCamelCase(result);
 }
 
-export const config = knexfile[process.env.NODE_ENV || "development"];
+const config = knexfile[process.env.NODE_ENV || "development"];
 config.log = {
   warn: log,
   error: log,
@@ -21,5 +21,7 @@ config.log = {
   debug: log,
 };
 
-// config.postProcessRespone = postProcessResponse;
-export default knex(config);
+module.exports = {
+  config,
+  db: knex(config),
+};

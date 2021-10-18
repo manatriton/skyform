@@ -1,4 +1,4 @@
-import {
+const {
   GraphQLInterfaceType,
   GraphQLID,
   GraphQLNonNull,
@@ -9,15 +9,15 @@ import {
   GraphQLInt,
   GraphQLSchema,
   GraphQLInputObjectType, GraphQLEnumType,
-} from "graphql";
+} = require("graphql");
 
-import {
+const {
   Mutation,
   Query,
   Workspace,
   Run,
-} from "./resolvers";
-import { parseId } from "./util";
+} = require("./resolvers");
+const { parseId } = require("./util");
 
 const typeMap = {
   workspace: "Workspace",
@@ -528,4 +528,4 @@ const schema = new GraphQLSchema({
   mutation: mutationType,
 });
 
-export default schema;
+module.exports = schema;

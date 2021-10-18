@@ -1,8 +1,8 @@
-import { Queue, QueueEvents } from "bullmq";
-import { parseISO } from "date-fns";
-import pino from "pino";
+const { Queue, QueueEvents } = require("bullmq");
+const { parseISO } = require("date-fns");
+const pino = require("pino");
 
-import db from "./db";
+const { db } = require("./db");
 
 const log = pino({ level: "info" });
 
@@ -136,4 +136,4 @@ class Scheduler {
   }
 }
 
-export default Scheduler;
+module.exports = Scheduler;

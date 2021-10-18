@@ -1,8 +1,8 @@
-import Runs from "./models/run";
-import Workspaces from "./models/workspace";
-import WorkspaceVariables from "./models/workspace-variable";
+const Runs = require("./models/run");
+const Workspaces = require("./models/workspace");
+const WorkspaceVariables = require("./models/workspace-variable");
 
-export function createStore(db) {
+function createStore(db) {
   return {
     db,
     workspaces: new Workspaces({ db }),
@@ -10,3 +10,5 @@ export function createStore(db) {
     workspaceVariables: new WorkspaceVariables({ db }),
   };
 }
+
+module.exports = { createStore };

@@ -1,12 +1,12 @@
-import crypto from "crypto";
-import baseX from "base-x";
+const crypto = require("crypto");
+const baseX = require("base-x");
 
 const BASE62_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const DEFAULT_TOKEN_SIZE = 50;
 
 const base62 = baseX(BASE62_ALPHABET);
 
-export default function generateToken(size = DEFAULT_TOKEN_SIZE) {
+module.exports = function generateToken(size = DEFAULT_TOKEN_SIZE) {
   return new Promise(((resolve, reject) => {
     crypto.randomBytes(size, (err, buf) => {
       if (err) {
@@ -16,4 +16,4 @@ export default function generateToken(size = DEFAULT_TOKEN_SIZE) {
       }
     });
   }));
-}
+};

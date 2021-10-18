@@ -1,12 +1,12 @@
-import express from "express";
-import { graphqlHTTP } from "express-graphql";
-import passport from "passport";
-import BearerStrategy from "passport-http-bearer";
+const express = require("express");
+const { graphqlHTTP } = require("express-graphql");
+const passport = require("passport");
+const BearerStrategy = require("passport-http-bearer");
 
-import db from "./db";
-import schema from "./schema";
-import { createStore } from "./store";
-import generateToken from "./token";
+const { db, config } = require("./db");
+const schema = require("./schema");
+const { createStore } = require("./store");
+const generateToken = require("./token");
 
 const context = { db, store: createStore(db) };
 
@@ -17,7 +17,7 @@ function initializeOptions(options) {
   };
 }
 
-export default async function(options = {}) {
+module.exports = async function(options = {}) {
 
   options = initializeOptions(options);
 
@@ -35,8 +35,8 @@ export default async function(options = {}) {
 
   const app = express();
 
-  app.use(passport.initialize());
-  app.use(passport.authenticate("bearer", { session: false }));
+  // app.use(passport.initialize());
+  // app.use(passport.authenticate("bearer", { session: false }));
 
   app.use("/graphql", graphqlHTTP({
     schema,
@@ -48,4 +48,4 @@ export default async function(options = {}) {
     console.log(`Server ready at ${options.address}`);
     console.log("Root token:", rootToken);
   });
-}
+};

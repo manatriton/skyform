@@ -1,5 +1,4 @@
-import { convertToCamelCase, formatId, parseId } from "../util"
-
+const { convertToCamelCase, formatId, parseId } = require("../util");
 const WORKSPACE_TYPE = "workspace";
 
 /**
@@ -87,4 +86,4 @@ class Workspaces {
   }
 }
 
-export default Workspaces;
+module.exports = Workspaces;

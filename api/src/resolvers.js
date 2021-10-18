@@ -1,16 +1,16 @@
-import path from "path";
-import { Readable } from "stream";
-import unzipper from "unzipper";
-import {
+const path = require("path");
+const { Readable } = require("stream");
+const unzipper = require("unzipper");
+const {
   decodeCursorString,
   encodeCursor,
   formatId,
   parseId,
-} from "./util";
+} = require("./util");
 
 const DEFAULT_PAGE_SIZE = 25;
 
-export const Query = {
+const Query = {
   // Retrieves a node by its global ID.
   node: async (_, { id }, { db, store }) => {
     const { type } = parseId(id);
@@ -115,7 +115,7 @@ export const Query = {
   },
 };
 
-export const Workspace = {
+const Workspace = {
   workspaceVariables: (obj, _, { store }) => {
     return store.workspaceVariables.getByWorkspaceId(obj.id);
   },
@@ -124,7 +124,7 @@ export const Workspace = {
   },
 };
 
-export const Run = {
+const Run = {
   applyOutput: (obj, _, { store }) => {
     return store.runs.getRunApplyOutput(obj.id);
   },
@@ -133,13 +133,13 @@ export const Run = {
   },
 };
 
-export const Mutation = {
+const Mutation = {
   createWorkspace: async (_, { input: { name, zipFile } }, { store }) => {
     let workspace = await store.workspaces.createWorkspace({ name });
 
     // Extract output to workspace specific folder.
     const baseDirectoryName = `workspace_${Date.now()}`;
-    const baseDirectory = path.resolve(new URL(import.meta.url).pathname, "../../fixtures", baseDirectoryName);
+    const baseDirectory = path.resolve(__filename, "../../fixtures", baseDirectoryName);
 
     const readable = Readable.from(Buffer.from(zipFile.base64, "base64"));
     readable.pipe(unzipper.Extract({ path: baseDirectory }));
@@ -183,4 +183,11 @@ export const Mutation = {
     const workspaceVariable = await store.workspaceVariables.update({ id, key, value, sensitive });
     return { workspaceVariable };
   },
+};
+
+module.exports = {
+  Query,
+  Workspace,
+  Run,
+  Mutation,
 };

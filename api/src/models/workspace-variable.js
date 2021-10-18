@@ -1,5 +1,4 @@
-import { convertToCamelCase, formatId, parseId } from "../util"
-
+const { convertToCamelCase, formatId, parseId } = require("../util");
 const WORKSPACE_VARIABLE_TYPE = "var";
 
 class WorkspaceVariables {
@@ -92,4 +91,4 @@ class WorkspaceVariables {
   }
 }
 
-export default WorkspaceVariables;
+module.exports = WorkspaceVariables;

@@ -1,4 +1,5 @@
-import { convertToCamelCase, formatId, parseId } from "../util";
+const { convertToCamelCase, formatId, parseId } = require("../util");
+
 
 const RUN_TYPE = "run";
 
@@ -154,4 +155,4 @@ class Runs {
   }
 }
 
-export default Runs;
+module.exports = Runs;

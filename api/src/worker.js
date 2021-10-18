@@ -1,10 +1,8 @@
-import path from "path";
+const { Worker } = require("bullmq");
+const execa = require("execa");
+const pino = require("pino");
 
-import { Worker } from "bullmq";
-import execa from "execa";
-import pino from "pino";
-
-import db, { config } from "./db";
+const { db, config } = require("./db");
 
 const log = pino({ level: "info" });
 
@@ -113,4 +111,4 @@ function startWorker(options = {}) {
   log.info(`worker listening for jobs on queue '${options.queueName}'`);
 }
 
-export default startWorker;
+module.exports = startWorker;

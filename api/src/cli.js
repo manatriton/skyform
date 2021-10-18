@@ -1,8 +1,8 @@
-import yargs from "yargs/yargs";
-import { hideBin } from "yargs/helpers";
-import startServer from "./server";
-import Scheduler from "./scheduler";
-import startWorker from "./worker";
+const yargs = require("yargs/yargs");
+const { hideBin } = require("yargs/helpers");
+const startServer = require("./server");
+const Scheduler = require("./scheduler");
+const startWorker = require("./worker");
 
 function api() {
   startServer();
@@ -17,7 +17,7 @@ function worker(args) {
   startWorker();
 }
 
-export function cli(argv) {
+function cli(argv) {
   yargs(hideBin(argv))
     .command("api", "start the Skyform GraphQL API", yargs => yargs, api)
     .command("scheduler", "start the scheduler process", yargs => yargs, scheduler)
@@ -27,3 +27,5 @@ export function cli(argv) {
     .help()
     .parse();
 }
+
+module.exports = { cli };
