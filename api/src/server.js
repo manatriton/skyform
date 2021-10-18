@@ -22,7 +22,7 @@ export default async function(options = {}) {
   options = initializeOptions(options);
 
   const rootToken = options.token || await generateToken();
-  const rootUser = { name: "root" };
+  const rootUser = { name: "dev-root" };
 
   // Use bearer strategy to authenticate token.
   passport.use(new BearerStrategy((token, done) => {

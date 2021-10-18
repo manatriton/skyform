@@ -1,49 +1,17 @@
 // Update with your config settings.
 
 module.exports = {
-
+  // Default configuration.
   development: {
     client: 'postgresql',
     connection: {
-      database: 'postgres',
-      user:     'postgres',
-      password: 'postgres',
+      database: process.env.SKYFORM_DATABASE,
+      user: process.env.SKYFORM_USER,
+      password: process.env.SKYFORM_PASSWORD,
     },
     pool: {
       min: 2,
       max: 10
     },
   },
-  //
-  // staging: {
-  //   client: 'postgresql',
-  //   connection: {
-  //     database: 'postgres',
-  //     user:     'postgres',
-  //     password: 'postgres',
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // },
-  //
-  // production: {
-  //   client: 'postgresql',
-  //   connection: {
-  //     database: 'postgres',
-  //     user:     'postgres',
-  //     password: 'postgres',
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // }
 };
