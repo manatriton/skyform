@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "base-x": "^3.0.8",
     "bullmq": "^1.49.0",
     "date-fns": "^2.25.0",
     "debug": "^4.3.2",

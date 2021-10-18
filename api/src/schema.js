@@ -94,6 +94,10 @@ const workspaceType = new GraphQLObjectType({
       description: "The variables corresponding to this workspace.",
       resolve: Workspace.workspaceVariables,
     },
+    runs: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(runType))),
+      resolve: Workspace.runs,
+    },
   }),
   interfaces: () => [nodeType],
 });

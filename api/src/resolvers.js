@@ -20,9 +20,7 @@ export const Query = {
       case "var":
         return store.workspaceVariables.getById(id);
       case "run":
-        const value = await store.runs.getRunById(id);
-        console.log("value", value);
-        return value;
+        return store.runs.getRunById(id);
       default:
         return null;
     }
@@ -107,28 +105,31 @@ export const Query = {
     return {
       edges,
       pageInfo,
-    }
+    };
   },
-  workspace: async (obj, { id }, { store }) => {
-    return await store.workspaces.getWorkspaceById(id);
+  workspace: (obj, { id }, { store }) => {
+    return store.workspaces.getWorkspaceById(id);
   },
-  workspaceByName: async (obj, { name }, { store }) => {
-    return await store.workspaces.getWorkspaceByName(name);
+  workspaceByName: (obj, { name }, { store }) => {
+    return store.workspaces.getWorkspaceByName(name);
   },
 };
 
 export const Workspace = {
-  workspaceVariables: async (obj, _, { store }) => {
-    return await store.workspaceVariables.getByWorkspaceId(obj.id);
+  workspaceVariables: (obj, _, { store }) => {
+    return store.workspaceVariables.getByWorkspaceId(obj.id);
+  },
+  runs: (obj, _, { store }) => {
+    return store.runs.getRunsByWorkspaceId(obj.id);
   },
 };
 
 export const Run = {
-  applyOutput: async (obj, _, { store }) => {
-    return await store.runs.getRunApplyOutput(obj.id);
+  applyOutput: (obj, _, { store }) => {
+    return store.runs.getRunApplyOutput(obj.id);
   },
-  planOutput: async (obj, _, { store }) => {
-    return await store.runs.getRunPlanOutput(obj.id);
+  planOutput: (obj, _, { store }) => {
+    return store.runs.getRunPlanOutput(obj.id);
   },
 };
 
@@ -140,7 +141,6 @@ export const Mutation = {
     const baseDirectoryName = `workspace_${Date.now()}`;
     const baseDirectory = path.resolve(new URL(import.meta.url).pathname, "../../fixtures", baseDirectoryName);
 
-    console.log(`Extracting to ${baseDirectory}`);
     const readable = Readable.from(Buffer.from(zipFile.base64, "base64"));
     readable.pipe(unzipper.Extract({ path: baseDirectory }));
 
@@ -154,7 +154,7 @@ export const Mutation = {
     return { workspace };
   },
   createWorkspaceVariable: async (_, { input: { workspaceId, key, value, sensitive = false }}, { store }) => {
-    const workspaceVariable = store.workspaceVariables.create({
+    const workspaceVariable = await store.workspaceVariables.create({
       key,
       value,
       sensitive,
@@ -179,7 +179,7 @@ export const Mutation = {
     const workspace = await store.workspaces.updateWorkspace({ id, name, workingDirectory });
     return { workspace };
   },
-  updateWorkspaceVariable: async(_, { input: { id, key, value, sensitive } }, { store }) => {
+  updateWorkspaceVariable: async (_, { input: { id, key, value, sensitive } }, { store }) => {
     const workspaceVariable = await store.workspaceVariables.update({ id, key, value, sensitive });
     return { workspaceVariable };
   },

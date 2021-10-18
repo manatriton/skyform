@@ -22,6 +22,7 @@ class Runs {
     "discarded_at",
     "canceled_at",
     "errored_at",
+    "workspace_id",
   ];
 
   static postProcess(rawRun) {
@@ -62,6 +63,23 @@ class Runs {
       .first();
 
     return Runs.postProcess(run);
+  }
+
+  async getRunsByWorkspaceId(workspaceId) {
+    let { type, baseId: workspaceBaseId } = parseId(workspaceId);
+    if (type !== "workspace") {
+      return null;
+    }
+
+    if (!(workspaceBaseId = parseInt(workspaceBaseId))) {
+      return null;
+    }
+
+    const runs = await this.db("runs")
+      .select(Runs.defaultColumns)
+      .where({ workspace_id: workspaceBaseId });
+
+    return runs.map(Runs.postProcess);
   }
 
   async createRun({ workspaceId }) {
