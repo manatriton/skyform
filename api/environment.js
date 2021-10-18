@@ -22,7 +22,7 @@ class JestEnvironment extends NodeEnvironment {
     this._knex = knex(knexConfig);
     await this._knex.migrate.latest();
     this.global.dbManager = dbManager;
-    this.global.dbName = knexConfig.connection.database;
+    this.global.database = knexConfig.connection.database;
     this.global.knex = this._knex;
   }
 

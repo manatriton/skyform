@@ -9,6 +9,14 @@ class Workspaces {
     this.db = options.db;
   }
 
+  static defaultColumns = [
+    "id",
+    "name",
+    "created_at",
+    "no_color",
+    "working_directory",
+  ];
+
   /**
    * Post-processing function for raw workspace object returned by Knex.
    *
@@ -46,7 +54,7 @@ class Workspaces {
 
   async getWorkspaceByName(name) {
     const workspace = await this.db("workspaces")
-      .select()
+      .select(Workspaces.defaultColumns)
       .where({ name })
       .first();
 
