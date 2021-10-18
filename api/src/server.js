@@ -35,8 +35,8 @@ module.exports = async function(options = {}) {
 
   const app = express();
 
-  // app.use(passport.initialize());
-  // app.use(passport.authenticate("bearer", { session: false }));
+  app.use(passport.initialize());
+  app.use(passport.authenticate("bearer", { session: false }));
 
   app.use("/graphql", graphqlHTTP({
     schema,

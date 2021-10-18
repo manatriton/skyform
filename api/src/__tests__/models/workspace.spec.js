@@ -1,7 +1,6 @@
 const Workspaces = require("../../models/workspace");
 const db = global.knex;
 
-
 describe("Workspaces", () => {
   test("should correctly post-processes raw workspace objects", async () => {
     const createdAt = new Date(1970, 1, 1);
