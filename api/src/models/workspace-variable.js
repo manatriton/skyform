@@ -16,6 +16,10 @@ class WorkspaceVariables {
   ];
 
   static postProcess(workspaceVariable) {
+    if (workspaceVariable == null) {
+      return null;
+    }
+
     return {
       ...convertToCamelCase(workspaceVariable),
       id: formatId(WORKSPACE_VARIABLE_TYPE, workspaceVariable.id),

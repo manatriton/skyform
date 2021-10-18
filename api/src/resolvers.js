@@ -20,7 +20,9 @@ export const Query = {
       case "var":
         return store.workspaceVariables.getById(id);
       case "run":
-        return store.runs.getRunById(id);
+        const value = await store.runs.getRunById(id);
+        console.log("value", value);
+        return value;
       default:
         return null;
     }

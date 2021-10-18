@@ -14,9 +14,12 @@ class Workspaces {
    * Post-processing function for raw workspace object returned by Knex.
    *
    * @param rawWorkspace
-   * @return workspace object after post-processing.
    */
   static postProcess(rawWorkspace) {
+    if (!rawWorkspace) {
+      return null;
+    }
+
     return {
       ...convertToCamelCase(rawWorkspace),
       id: formatId(WORKSPACE_TYPE, rawWorkspace.id),
@@ -39,11 +42,7 @@ class Workspaces {
       .where({ id: baseId })
       .first();
 
-    if (!workspace) {
-      return null;
-    }
-
-    return workspace ? Workspaces.postProcess(workspace) : null;
+    return Workspaces.postProcess(workspace);
   }
 
   async getWorkspaceByName(name) {
@@ -52,11 +51,7 @@ class Workspaces {
       .where({ name })
       .first();
 
-    if (!workspace) {
-      return null;
-    }
-
-    return workspace ? Workspaces.postProcess(workspace) : null;
+    return Workspaces.postProcess(workspace);
   }
 
   async createWorkspace({ name }) {

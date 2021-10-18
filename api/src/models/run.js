@@ -25,6 +25,10 @@ class Runs {
   ];
 
   static postProcess(rawRun) {
+    if (!rawRun) {
+      return null;
+    }
+
     return {
       id: formatId(RUN_TYPE, rawRun.id),
       status: rawRun.status,

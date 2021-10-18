@@ -32,8 +32,13 @@ async function handleJob(job) {
     // Initialize terraform.
     log.info("running terraform init");
 
+    let address = "localhost";
+    if (config.connection.host) {
+      address = config.connection.port ? `${config.connection.host}:${config.connection.port}` : config.connection.host;
+    }
+
     const conn_str =
-      `-backend-config=conn_str=postgres://${config.connection.user}:${config.connection.password}@localhost/terraform_backend?sslmode=disable`;
+      `-backend-config=conn_str=postgres://${config.connection.user}:${config.connection.password}@${address}/terraform_backend?sslmode=disable`;
 
     await execa("terraform", ["init", conn_str], {
       all: true,
