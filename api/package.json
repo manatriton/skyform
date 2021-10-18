@@ -7,7 +7,7 @@
     "skyform": "bin/skyform"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +17,6 @@
     "date-fns": "^2.25.0",
     "debug": "^4.3.2",
     "dotenv": "^10.0.0",
-    "esm": "^3.2.25",
     "execa": "^5.1.1",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
@@ -30,9 +29,14 @@
     "pino": "^6.13.3",
     "pino-debug": "^2.0.0",
     "unzipper": "^0.10.11",
+    "uuid": "^8.3.2",
     "yargs": "^17.2.1"
   },
   "devDependencies": {
+    "jest": "^27.3.0",
+    "jest-environment-node": "^27.3.0",
+    "knex-db-manager": "^0.7.0",
+    "pg-escape": "^0.2.0",
     "pino-pretty": "^7.0.1"
   }
 }

@@ -1,6 +1,4 @@
 const { convertToCamelCase, formatId, parseId } = require("../util");
-
-
 const RUN_TYPE = "run";
 
 class Runs {

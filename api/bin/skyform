@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// require("pino-debug")();
 const dotenv = require("dotenv");
 dotenv.config();
 require("../src/cli").cli(process.argv);
